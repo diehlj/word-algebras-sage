@@ -7,7 +7,7 @@ Very much work in progress.
 
 To install, run::
 
-   sage -pip install https://github.com/diehlj/word-algebras-sage
+   sage -pip install git+git://github.com/diehlj/word-algebras-sage
 
 
 Then download per hand from here or locate on your disk the examples.sage file and::
