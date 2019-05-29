@@ -5,11 +5,8 @@ A small library to compute in the (nilpotent) concatenation and shuffle word alg
 Very much work in progress.
 
 
-To install, run::
+To install, and run the small example::
 
    sage -pip install git+git://github.com/diehlj/word-algebras-sage
-
-
-Then download per hand from here or locate on your disk the examples.sage file and::
-
+   wget https://raw.githubusercontent.com/diehlj/word-algebras-sage/master/examples.sage
    sage examples.sage
