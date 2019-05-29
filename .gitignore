@@ -1,0 +1,9 @@
+*
+!.gitignore
+!*.tex
+!*.bib
+!*.py
+!*.sage
+*.sage.py
+!code
+!*.rst
