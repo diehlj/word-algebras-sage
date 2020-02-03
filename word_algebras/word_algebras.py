@@ -29,7 +29,7 @@ def from_str(s, ALGEBRA, sympy_coefficients=False):
     element_parser = pp.Word(pp.nums)
     ALGEBRA_GENS = [ list(g)[0][0] for g in ALGEBRA.gens() ]
     def monomoial_from_str(s):
-        return ALGEBRA.monomial( reduce( operator.mul, [ ALGEBRA_GENS[int(i)-1] for i in s ] ) )
+        return ALGEBRA.monomial( functools.reduce( operator.mul, [ ALGEBRA_GENS[int(i)-1] for i in s ] ) )
 
 
     if sympy_coefficients:
@@ -76,7 +76,7 @@ def word_to_shuffle_monomial(SHUFF, w): # XXX name
     SHUFFLE_LETTERS = [ list(g)[0][0] for g in SHUFF.gens() ] # XXX
     if len(w) == 0:
         return SHUFF.one()
-    return SHUFF.monomial( reduce(operator.mul, map(lambda i: SHUFFLE_LETTERS[i], w)) ) # XXX starting at 0 vs starting at 1 ..
+    return SHUFF.monomial( functools.reduce(operator.mul, map(lambda i: SHUFFLE_LETTERS[i], w)) ) # XXX starting at 0 vs starting at 1 ..
 
 def shuffle_monomial_to_word(SHUFF, m):
     SHUFFLE_LETTERS = [ list(g)[0][0] for g in SHUFF.gens() ] # XXX
@@ -104,7 +104,7 @@ def to_monomial( w ): # XXX misnomer, this is still FreeMonoid
     if len(w) == 0:
         raise "Not implemented yet." # XXX
     else:
-        return reduce(operator.mul, w)
+        return functools.reduce(operator.mul, w)
 
 class NilpotentShuffleElement(FreeAlgebraElement): #IndexedFreeModuleElement, AlgebraElement):
 
@@ -247,7 +247,7 @@ def as_vector(el):
     #v = vector( el.parent(), SIZE )
     v = [0] * SIZE
     for m, c in list(el):
-        flat = map( lambda x: gens.index(x), to_word( m ) )
+        flat = list(map( lambda x: gens.index(x), to_word( m ) ))
         i = 0
         current_level = 1
         for f in reversed(flat):
