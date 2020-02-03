@@ -151,6 +151,7 @@ class NilpotentShuffleAlgebra(FreeAlgebra_generic):
         The free shuffle algebra on `n` generators over a base ring.
 
         TESTS:
+            sage: from word_algebras import *
             sage: SHUFF = NilpotentShuffleAlgebra(QQ,2,'x',3)
             sage: x0,x1 = SHUFF.gens()
             sage: x0 * x1
@@ -206,6 +207,7 @@ class NilpotentFreeAlgebra(FreeAlgebra_generic):
         The free algebra on `n` generators over a base ring.
 
         TESTS:
+            sage: from word_algebras import *
             sage: CONCAT = NilpotentFreeAlgebra(QQ,2,'x',3)
             sage: x0,x1 = CONCAT.gens()
             sage: x0 * x1
@@ -228,13 +230,14 @@ def as_vector(el):
     """Convert an element for NilpotentShuffleAlgebra or NilpotentFreeAlgebra into a vector.
 
         TESTS:
+        sage: from word_algebras import *
         sage: NFA = NilpotentFreeAlgebra(QQ,2,'x',nilpotency_order=3)
         sage: x0, x1 = NFA.gens()
         sage: el = 1 + 2 * x0 + 3 * x1 + 4 * x0**2 + 5 * x0 * x1 + 6 * x1 * x0 + 7 * x1**2\
             + 8 * x0**3 + 9 * x0*x0*x1 + 10 * x0 * x1 * x0 + 11 * x0 * x1 * x1 \
             + 12 * x1*x0*x0 + 13 * x1*x0*x1 + 14 * x1 * x1 * x0 + 15 * x1 * x1 * x1
         sage: as_vector(el)
-        (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
     gens = el.parent().gens()
     DIM = len(gens)
@@ -263,6 +266,7 @@ def as_vector(el):
 def left_action_permutation_on_list(sigma, ell):
     """
     TESTS:
+    sage: from word_algebras import *
     sage: assert [77,99,8] == left_action_permutation_on_list( Permutation([3,2,1]), [8,99,77] )
     """
     #assert len(sigma) == len(ell)
@@ -274,33 +278,32 @@ def left_action_permutation_on_list(sigma, ell):
 def left_action_permutation_on_words(tau, el):
     """
     TESTS:
-    sage: perm = Permutation( [2,1] )
-    sage: A = GroupAlgebra(SymmetricGroup(2), QQ)
-    sage: tau = A(perm)
-    sage: CONCAT = NilpotentFreeAlgebra(QQ,2,'x',2)
-    sage: x0, x1 = CONCAT.gens()
-    sage: left_action_permutation_on_words( tau, x0 * x1 )
-    x1*x0
+    sage: from word_algebras import *
+    sage: tau = GroupAlgebra(SymmetricGroup(3), QQ)( Permutation( [2,3,1] ) )
+    sage: CONCAT = NilpotentFreeAlgebra(QQ,3,'x',3)
+    sage: x0, x1, x2 = CONCAT.gens()
+    sage: left_action_permutation_on_words( tau, x0 * x1 * x2 )
+    x2*x0*x1
     """
     P = el.parent()
     def _left_action(tau):
         def f(x):
             w = to_word( x )
-            #print( 'w=', w, type(w), type(w[0]) , w[0] * w[1] )
             for sigma, c in tau:
                 yield ( to_monomial(left_action_permutation_on_list(sigma, w)), c )
         return f
-    return apply_linear_map_gen(_left_action(tau), el )
+    return apply_linear_map_gen( _left_action(tau), el )
 
 
 def apply_linear_map_gen(fn, el): # XXX name
     """
     TESTS:
+    sage: from word_algebras import *
     sage: NFA = NilpotentFreeAlgebra(QQ,2,'y',nilpotency_order=3)
     sage: y0, y1 = NFA.gens()
-    sage: def f(x):
-    ...      yield (x*x, 3)
-    sage: res = apply_linear_map_gen(f, 5*y0)
+    sage: def my_f(x):
+    ....:   yield (x*x, 3)
+    sage: res = apply_linear_map_gen(my_f, 5*y0)
     sage: res
     15*y0^2
     sage: F = NFA.module_morphism( on_basis=lambda b: 3 * NFA.monomial(b*b), codomain=NFA )
@@ -332,6 +335,7 @@ def r(el):
     """Dynkin map, p.XXX in Reutenauer - Free Lie algebras.
     
     TESTS:
+    sage: from word_algebras import *
     sage: NFA = NilpotentFreeAlgebra(QQ,2,'y',nilpotency_order=3)
     sage: y0, y1 = NFA.gens()
     sage: assert y0 * y1 - y1 * y0 == r( y0 * y1 )
@@ -401,6 +405,7 @@ def inverse(el):
 def log(el):
     """
     TESTS:
+    sage: from word_algebras import *
     sage: NFA = NilpotentFreeAlgebra(QQ,2,'x',3)
     sage: x0,x1 = NFA.gens()
     sage: assert x0 == log(exp(x0))
