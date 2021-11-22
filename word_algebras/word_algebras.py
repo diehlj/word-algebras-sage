@@ -10,6 +10,12 @@ import pyparsing as pp
 import six
 import functools
 
+####
+# Run doctests via:
+#   sage -t word_algebras/word_algebras.py
+####
+
+
 #def test_misc():
 #    # TODO CONTINUE HERE
 #    NFA = NilpotentFreeAlgebra(QQ,2,'y',nilpotency_order=3)
@@ -128,6 +134,7 @@ class NilpotentShuffleElement(FreeAlgebraElement): #IndexedFreeModuleElement, Al
         return A._from_dict(z_elt)
 
     def succ(self,y):
+        """Half-shuffle."""
         A = self.parent()
         z_elt = {}
         for mx, cx in self:
@@ -251,6 +258,7 @@ def as_vector(el):
     v = [0] * SIZE
     for m, c in list(el):
         flat = list(map( lambda x: gens.index(x), to_word( m ) ))
+        #print('flat=', flat)
         i = 0
         current_level = 1
         for f in reversed(flat):
@@ -261,6 +269,37 @@ def as_vector(el):
         #    v[i] = c.complex_embedding()
         #except:
         #    v[i] = c
+    return v
+
+def as_vector_hom(el, level):
+    """Convert an element for NilpotentShuffleAlgebra or NilpotentFreeAlgebra into a vector (homogenous).
+
+        TESTS:
+        sage: from word_algebras import *
+        sage: NFA = NilpotentFreeAlgebra(QQ,2,'x',nilpotency_order=3)
+        sage: x0, x1 = NFA.gens()
+        sage: el = 1 + 2 * x0 + 3 * x1 + 4 * x0**2 + 5 * x0 * x1 + 6 * x1 * x0 + 7 * x1**2\
+            + 8 * x0**3 + 9 * x0*x0*x1 + 10 * x0 * x1 * x0 + 11 * x0 * x1 * x1 \
+            + 12 * x1*x0*x0 + 13 * x1*x0*x1 + 14 * x1 * x1 * x0 + 15 * x1 * x1 * x1
+        sage: as_vector_hom(el,1)
+        [2, 3]
+        sage: as_vector_hom(el,2)
+        [4, 5, 6, 7]
+    """
+    gens = el.parent().gens()
+    DIM = len(gens)
+    SIZE = DIM**level
+    v = [0] * SIZE
+    for m, c in list(el):
+        flat = list(map( lambda x: gens.index(x), to_word( m ) ))
+        if len(flat) == level:
+            #print('flat=', flat)
+            i = 0
+            current_level = 1
+            for f in reversed(flat):
+                i += DIM**(current_level-1) * (f+1)
+                current_level += 1
+            v[i - (DIM**level-1)] = c
     return v
 
 def left_action_permutation_on_list(sigma, ell):
@@ -383,6 +422,10 @@ def lie_bracket(a,b):
 
 def area_bracket(a,b):
     return a.succ(b) - b.succ(a)
+
+def vol_bracket(x,y,z):
+    ar = area_bracket
+    return ar(ar(x,y),z) + ar(ar(y,z),x) + ar(ar(z,x),y)
 
 def exp(el):
     ret = el.base_ring().one()
