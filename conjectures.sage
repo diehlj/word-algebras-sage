@@ -49,6 +49,7 @@ def shuffle_conjecture():
 
     print( 'total nr of equations=', n )
 
+import numpy as np
 def volume_identities():
     #a, b, c = map(from_str('{}'.format(i),NSA) from 
     vol = vol_bracket
@@ -62,8 +63,11 @@ def volume_identities():
     for i,j,k in itertools.permutations( (a,b,c) ):
         vs.append( as_vector_hom( vol(i,j,k), 3 ) )
 
-    M = matrix( vs )
-    assert 1 == M.rank()
+    #M = matrix( vs )
+    M = np.array( vs )
+    np.save('M-3', M)
+    #assert 1 == M.rank()
+    assert 1 == np.linalg.matrix_rank(M)
 
     #print( as_vector_hom(vol(a,b,c), 3 ) )
     #print( len(as_vector_hom(vol(a,b,c), 3 )) )
@@ -82,8 +86,11 @@ def volume_identities():
         ell,m = map( lambda idx: letters[idx],sorted(list(S-A)) )
         vs.append( as_vector_hom( vol(vol(i,j,k),ell,m), 5 ) )
         #vs.append( as_vector( vol(vol(i,j,k),ell,m) ) )
-    M = matrix( vs )
-    assert binomial(5,3) == M.rank()
+    # M = matrix( vs )
+    M = np.array( vs )
+    np.save('M-5', M)
+    #assert binomial(5,3) == M.rank()
+    assert binomial(5,3) == np.linalg.matrix_rank(M)
 
     # TOO SLOW:
     NSA = NilpotentShuffleAlgebra(QQ,7,'y',nilpotency_order=7)
@@ -111,8 +118,10 @@ def volume_identities():
             ell,m,n = map( lambda idx: letters[idx],sorted(list(B)) )
             o       = list(map( lambda idx: letters[idx],sorted(list(C)) ))[0]
             vs.append( as_vector_hom( vol(vol(i,j,k),vol(ell,m,n),o), 7 ) )
-    M = matrix( vs )
-    print(M.rank())
+    # M = matrix( vs )
+    M = np.array( vs )
+    np.save('M-7', M)
+    print( npp.linalg.matrix_rank(M) )
 
     # Not sure how to count the expected kernel here:
     #vs = []
