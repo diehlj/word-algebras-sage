@@ -116,12 +116,14 @@ def volume_identities():
             C = S-A-B
             i,j,k   = map( lambda idx: letters[idx], sorted(list(A)) )
             ell,m,n = map( lambda idx: letters[idx],sorted(list(B)) )
-            o       = list(map( lambda idx: letters[idx],sorted(list(C)) ))[0]
-            vs.append( as_vector_hom( vol(vol(i,j,k),vol(ell,m,n),o), 7 ) )
+            if i < ell:
+                o       = list(map( lambda idx: letters[idx],sorted(list(C)) ))[0]
+                vs.append( as_vector_hom( vol(vol(i,j,k),vol(ell,m,n),o), 7 ) )
     # M = matrix( vs )
     M = np.array( vs )
+    print(M.shape)
     np.save('M-7', M)
-    print( npp.linalg.matrix_rank(M) )
+    print( np.linalg.matrix_rank(M) )
 
     # Not sure how to count the expected kernel here:
     #vs = []
