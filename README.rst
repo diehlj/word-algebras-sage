@@ -7,6 +7,6 @@ Very much work in progress.
 
 To install, and run the small example::
 
-   sage -pip install git+git://github.com/diehlj/word-algebras-sage
+   sage -pip install git+https://github.com/diehlj/word-algebras-sage
    wget https://raw.githubusercontent.com/diehlj/word-algebras-sage/master/examples.sage
    sage examples.sage
